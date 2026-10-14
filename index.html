@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" data-theme="light">
 
 <head>
@@ -8,51 +7,35 @@
     <title>Job Application Tracker</title>
 
     <!-- Google Fonts: Geist -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
-
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- DaisyUI CSS CDN -->
-
     <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.min.css" rel="stylesheet" type="text/css">
 
     <script>
-
         tailwind.config = {
-
             darkMode: ['selector', '[data-theme="dark"]'],
-
             theme: {
-
                 extend: {
-
                     fontFamily: {
-
-                        sans: ['Geist', -apple - system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-
+                        sans: ['Geist', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
                     },
-
                 }
-
             }
-
         }
-
     </script>
-
-
 </head>
 
-<body class="min-h-screen bg-base-200 text-base-content font-sans antialiased selection:bg-primary/20 selection:text-primary transition-colors duration-200">
+<!-- Added 'flex flex-col' so the layout can push the footer down -->
+<body class="min-h-screen flex flex-col bg-base-200 text-base-content font-sans antialiased selection:bg-primary/20 selection:text-primary transition-colors duration-200">
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <!-- Added 'flex-grow w-full' so main pushes the footer to the bottom -->
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
         <!-- Header with Title & Theme Switcher -->
         <header class="flex items-center justify-between mb-8">
@@ -79,9 +62,155 @@
             </label>
         </header>
 
+        <!-- Dashboard Statistics (3 Responsive Metric Cards) -->
+        <section aria-label="Dashboard Statistics" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <!-- Total Card -->
+            <div class="card bg-base-100 border border-base-300 shadow-xs">
+                <div class="card-body p-5">
+                    <p class="text-sm font-medium text-base-content/70 mb-2">Total</p>
+                    <p id="total-count" class="text-3xl sm:text-4xl font-bold text-base-content leading-none">0</p>
+                </div>
+            </div>
+
+            <!-- Interview Card -->
+            <div class="card bg-base-100 border border-base-300 shadow-xs">
+                <div class="card-body p-5">
+                    <p class="text-sm font-medium text-base-content/70 mb-2">Interview</p>
+                    <p id="interview-count" class="text-3xl sm:text-4xl font-bold text-success leading-none">0</p>
+                </div>
+            </div>
+
+            <!-- Rejected Card -->
+            <div class="card bg-base-100 border border-base-300 shadow-xs">
+                <div class="card-body p-5">
+                    <p class="text-sm font-medium text-base-content/70 mb-2">Rejected</p>
+                    <p id="rejected-count" class="text-3xl sm:text-4xl font-bold text-error leading-none">0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="divider my-6"></div>
+
+        <!-- Available Jobs Section -->
+        <section aria-labelledby="available-jobs-heading">
+            <!-- Section Header with Title & Count -->
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="available-jobs-heading" class="text-lg sm:text-xl font-bold text-base-content">Available Jobs</h2>
+                <span id="available-jobs-count" class="text-sm font-medium text-base-content/70">0 jobs</span>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="flex items-center gap-2 mb-6" role="tablist" aria-label="Job categories">
+                <button
+                    type="button"
+                    id="tab-all"
+                    data-tab="all"
+                    role="tab"
+                    aria-selected="true"
+                    class="tab-btn btn btn-sm btn-primary">
+                    All
+                </button>
+                <button
+                    type="button"
+                    id="tab-interview"
+                    data-tab="interview"
+                    role="tab"
+                    aria-selected="false"
+                    class="tab-btn btn btn-sm btn-ghost border border-base-300 bg-base-100">
+                    Interview
+                </button>
+                <button
+                    type="button"
+                    id="tab-rejected"
+                    data-tab="rejected"
+                    role="tab"
+                    aria-selected="false"
+                    class="tab-btn btn btn-sm btn-ghost border border-base-300 bg-base-100">
+                    Rejected
+                </button>
+            </div>
+
+            <!-- Job Cards Container -->
+            <div id="jobs-container" class="flex flex-col gap-4">
+                <!-- Rendered dynamically by script.js -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="card bg-base-100 border border-base-300 shadow-xs hidden">
+                <div class="card-body py-16 px-6 text-center flex flex-col items-center justify-center">
+                    <img src="./jobs.png" alt="No jobs available" class="w-20 h-20 sm:w-24 sm:h-24 mb-4 object-contain mx-auto">
+                    <h3 class="text-lg sm:text-xl font-bold text-base-content mb-1">No jobs available</h3>
+                    <p class="text-sm text-base-content/70">Check back soon for new job opportunities</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <!-- Footer correctly placed inside <body> -->
+    <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content items-center p-4">
+        <aside class="grid-flow-col items-center">
+            <svg
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                class="fill-current">
+                <path
+                    d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path>
+            </svg>
+            <p>© 2026 Job Application Tracker - All right reserved</p>
+        </aside>
+        
+        <nav class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+            <!-- GitHub Link with GitHub SVG Logo -->
+            <a href="https://github.com/Rnrezanur" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="hover:opacity-80">
+                <svg
+                    aria-label="GitHub"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="fill-current">
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                </svg>
+            </a>
 
+            <!-- YouTube Link -->
+            <a href="https://www.youtube.com/@FunkyFighter" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="hover:opacity-80">
+                <svg
+                    aria-label="YouTube"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="fill-current">
+                    <path
+                        d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                </svg>
+            </a>
+
+            <!-- Facebook Link -->
+            <a href="https://www.facebook.com/Rnrezanur/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="hover:opacity-80">
+                <svg
+                    aria-label="Facebook"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="fill-current">
+                    <path
+                        d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+                </svg>
+            </a>
+        </nav>
+    </footer>
 
     <script src="script.js"></script>
 </body>
