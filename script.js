@@ -194,3 +194,93 @@ function getFilteredJobs() {
   }
   return jobs;
 }
+
+/**
+ * Updates tab button styles according to the active tab
+ */
+function updateTabButtonsUI() {
+  tabButtons.forEach(btn => {
+    const tab = btn.getAttribute('data-tab');
+    if (tab === currentTab) {
+      btn.setAttribute('aria-selected', 'true');
+      btn.className = 'tab-btn btn btn-sm btn-primary';
+    } else {
+      btn.setAttribute('aria-selected', 'false');
+      btn.className = 'tab-btn btn btn-sm btn-ghost border border-base-300 bg-base-100';
+    }
+  });
+}
+
+/**
+ * Handle tab switching
+ */
+function handleTabChange(tabName) {
+  if (currentTab === tabName) return;
+  currentTab = tabName;
+  updateTabButtonsUI();
+  render();
+}
+
+/**
+ * Main Render Function
+ */
+function render() {
+  // Sync tab buttons UI
+  updateTabButtonsUI();
+
+  // 1. Calculate dashboard statistics
+  const totalCount = jobs.length;
+  const interviewCount = jobs.filter(j => j.status === 'Interview').length;
+  const rejectedCount = jobs.filter(j => j.status === 'Rejected').length;
+
+  // 2. Update dashboard DOM
+  totalCountEl.textContent = totalCount;
+  interviewCountEl.textContent = interviewCount;
+  rejectedCountEl.textContent = rejectedCount;
+
+  // 3. Filter jobs based on active tab
+  const filteredJobs = getFilteredJobs();
+
+  // 4. Update tab-wise jobs count text
+  if (currentTab === 'all') {
+    availableJobsCountEl.textContent = `${totalCount} ${totalCount === 1 ? 'job' : 'jobs'}`;
+  } else {
+    availableJobsCountEl.textContent = `${filteredJobs.length} of ${totalCount} ${totalCount === 1 ? 'job' : 'jobs'}`;
+  }
+
+  // 5. Render job cards or empty state
+  if (filteredJobs.length === 0) {
+    jobsContainer.innerHTML = '';
+    jobsContainer.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+  } else {
+    emptyState.classList.add('hidden');
+    jobsContainer.classList.remove('hidden');
+    jobsContainer.innerHTML = filteredJobs.map(job => createJobCardHTML(job)).join('');
+  }
+}
+
+/**
+ * Handle job status toggling (Interview / Rejected / Not Applied)
+ */
+function handleStatusToggle(jobId, targetStatus) {
+  const job = jobs.find(j => j.id === jobId);
+  if (!job) return;
+
+  // Toggle behavior: if already in the target status, revert to 'Not Applied'
+  if (job.status === targetStatus) {
+    job.status = 'Not Applied';
+  } else {
+    job.status = targetStatus;
+  }
+
+  render();
+}
+
+/**
+ * Handle job deletion
+ */
+function handleDeleteJob(jobId) {
+  jobs = jobs.filter(j => j.id !== jobId);
+  render();
+}
