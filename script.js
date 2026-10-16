@@ -181,3 +181,16 @@ function createJobCardHTML(job) {
     </article>
   `;
 }
+
+/**
+ * Filter jobs according to the active tab
+ */
+function getFilteredJobs() {
+  if (currentTab === 'interview') {
+    return jobs.filter(job => job.status === 'Interview');
+  }
+  if (currentTab === 'rejected') {
+    return jobs.filter(job => job.status === 'Rejected');
+  }
+  return jobs;
+}
