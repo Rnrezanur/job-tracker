@@ -284,3 +284,66 @@ function handleDeleteJob(jobId) {
   jobs = jobs.filter(j => j.id !== jobId);
   render();
 }
+
+// Event Delegation on Jobs Container for status and delete buttons
+jobsContainer.addEventListener('click', (e) => {
+  // Handle Delete button click
+  const deleteBtn = e.target.closest('.delete-btn');
+  if (deleteBtn) {
+    const jobId = parseInt(deleteBtn.getAttribute('data-id'), 10);
+    handleDeleteJob(jobId);
+    return;
+  }
+
+  // Handle Interview button click
+  const interviewBtn = e.target.closest('.btn-interview');
+  if (interviewBtn) {
+    const jobId = parseInt(interviewBtn.getAttribute('data-id'), 10);
+    handleStatusToggle(jobId, 'Interview');
+    return;
+  }
+
+  // Handle Rejected button click
+  const rejectedBtn = e.target.closest('.btn-rejected');
+  if (rejectedBtn) {
+    const jobId = parseInt(rejectedBtn.getAttribute('data-id'), 10);
+    handleStatusToggle(jobId, 'Rejected');
+    return;
+  }
+});
+
+// Attach tab click listeners
+tabButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const tab = button.getAttribute('data-tab');
+    handleTabChange(tab);
+  });
+});
+
+// Theme Controller (DaisyUI Dark Mode)
+function initTheme() {
+  const savedTheme = localStorage.getItem('job_tracker_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const activeTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+  document.documentElement.setAttribute('data-theme', activeTheme);
+  if (themeToggle) {
+    themeToggle.checked = (activeTheme === 'dark');
+  }
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('change', () => {
+    const newTheme = themeToggle.checked ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('job_tracker_theme', newTheme);
+    updateTabButtonsUI();
+  });
+}
+
+// Initial render
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  updateTabButtonsUI();
+  render();
+});
