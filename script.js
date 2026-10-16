@@ -107,3 +107,77 @@ function getStatusBadgeHTML(status) {
   }
   return `<span class="badge badge-ghost font-semibold text-xs uppercase tracking-wider">NOT APPLIED</span>`;
 }
+
+/**
+ * Creates HTML string for a single job card using DaisyUI card & button components
+ */
+function createJobCardHTML(job) {
+  const isInterview = job.status === 'Interview';
+  const isRejected = job.status === 'Rejected';
+
+  const interviewBtnClasses = isInterview
+    ? 'btn-success text-white shadow-xs'
+    : 'btn-outline btn-success';
+
+  const rejectedBtnClasses = isRejected
+    ? 'btn-error text-white shadow-xs'
+    : 'btn-outline btn-error';
+
+  return `
+    <article class="card bg-base-100 border border-base-300 shadow-xs transition-transform duration-150 hover:-translate-y-0.5 job-card" data-id="${job.id}">
+      <div class="card-body p-5 sm:p-6">
+        <!-- Top Row: Company Name & Delete Button -->
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-base-content leading-tight">${job.companyName}</h3>
+            <p class="text-sm font-medium opacity-80 mt-0.5">${job.position}</p>
+          </div>
+          <!-- Delete Button (Phosphor Trash Icon) -->
+          <button
+            type="button"
+            class="btn btn-ghost btn-circle btn-sm text-base-content/50 hover:text-error delete-btn"
+            data-id="${job.id}"
+            title="Delete job"
+            aria-label="Delete ${job.companyName} job">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256" class="pointer-events-none">
+              <path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Job Metadata -->
+        <div class="flex flex-wrap items-center gap-2 text-xs font-medium opacity-65 mt-2">
+          <span>${job.location}</span>
+          <span aria-hidden="true">•</span>
+          <span>${job.type}</span>
+          <span aria-hidden="true">•</span>
+          <span>${job.salary}</span>
+        </div>
+
+        <!-- Status Badge -->
+        <div class="mt-3">
+          ${getStatusBadgeHTML(job.status)}
+        </div>
+
+        <!-- Description -->
+        <p class="text-sm opacity-75 mt-3 mb-4 leading-relaxed">${job.description}</p>
+
+        <!-- Action Buttons (DaisyUI Buttons) -->
+        <div class="flex items-center gap-3 pt-1">
+          <button
+            type="button"
+            class="btn btn-sm ${interviewBtnClasses} btn-interview uppercase tracking-wider text-xs"
+            data-id="${job.id}">
+            INTERVIEW
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm ${rejectedBtnClasses} btn-rejected uppercase tracking-wider text-xs"
+            data-id="${job.id}">
+            REJECTED
+          </button>
+        </div>
+      </div>
+    </article>
+  `;
+}
